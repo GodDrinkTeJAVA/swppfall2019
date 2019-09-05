@@ -51,7 +51,14 @@ def check_filename_existence(func):
         BabynameFileNotFoundException: if there is no such file named as the first argument of the function to decorate.
     """
     # TODO: Implement this decorator.
-
+    def raiseError(filename):
+        # do something with try catch... maybe?
+        try:
+            func(filename)
+        except FileNotFoundError:
+            raise BabynameFileNotFoundException("No such babyname file or directory: {0}".format(filename))
+    
+    return raiseError
 
 class BabynameParser:
 
