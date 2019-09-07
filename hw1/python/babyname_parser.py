@@ -51,10 +51,10 @@ def check_filename_existence(func):
         BabynameFileNotFoundException: if there is no such file named as the first argument of the function to decorate.
     """
     # TODO: Implement this decorator.
-    def raiseError(filename):
+    def raiseError(self, filename):
         # do something with try catch... maybe?
         try:
-            return func(filename)
+            return func(self, filename)
         except FileNotFoundError:
             raise BabynameFileNotFoundException("No such babyname file or directory: {0}".format(filename))
     
@@ -90,7 +90,7 @@ class BabynameParser:
         # each tuple is: (rank, male-name, female-name)
         self.rank_to_names_tuples = []  # TODO: Extract the list of rank to names tuples.
         # build regex with grouping and we got the tuples
-        self.rank_to_names_tuples = re.findall(r'<tr align="right"><td>(\d)+</td><td>([a-zA-Z])+</td><td>([a-zA-Z])+</td>', text)
+        self.rank_to_names_tuples = re.findall(r'<tr align="right"><td>(\d+)</td><td>([a-zA-Z]+)</td><td>([a-zA-Z]+)</td>', text)
         
 
     def parse(self, parsing_lambda):
@@ -105,4 +105,4 @@ class BabynameParser:
             The list of parsed babynames.
         """
         # TODO: Implement this method.
-        return map(parsing_lambda(self.rank_to_names_tuples))
+        return list(map(parsing_lambda, self.rank_to_names_tuples))
