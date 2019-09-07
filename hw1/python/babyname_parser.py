@@ -54,7 +54,7 @@ def check_filename_existence(func):
     def raiseError(filename):
         # do something with try catch... maybe?
         try:
-            func(filename)
+            return func(filename)
         except FileNotFoundError:
             raise BabynameFileNotFoundException("No such babyname file or directory: {0}".format(filename))
     
@@ -75,6 +75,8 @@ class BabynameParser:
 
         text = "File is not read yet"  # TODO: Open and read the given file.
         # Could process the file line-by-line, but regex on the whole text at once is even easier.
+        f = open(filename, "r")
+        text = f.read()
 
         # The year extracting code is provided. Implement the tuple extracting code by using this.
         year_match = re.search(r'Popularity\sin\s(\d{4})', text)
@@ -87,6 +89,9 @@ class BabynameParser:
         # Extract all the data tuples with a findall()
         # each tuple is: (rank, male-name, female-name)
         self.rank_to_names_tuples = []  # TODO: Extract the list of rank to names tuples.
+        # build regex with grouping and we got the tuples
+        self.rank_to_names_tuples = re.findall(r'<tr align="right"><td>(\d)+</td><td>([a-zA-Z])+</td><td>([a-zA-Z])+</td>', text)
+        
 
     def parse(self, parsing_lambda):
         """
@@ -100,3 +105,4 @@ class BabynameParser:
             The list of parsed babynames.
         """
         # TODO: Implement this method.
+        return map(parsing_lambda(self.rank_to_names_tuples))
